@@ -1,0 +1,11 @@
+[Project]
+status = unmaintained
+name = My Project 3
+description = Who would not love this app?
+category = Desktop
+repo = http://www.github.com/myproject1
+languages = C++
+
+[Contact]
+name = Jane Doe
+email = yes@no.com

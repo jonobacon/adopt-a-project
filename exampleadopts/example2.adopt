@@ -1,0 +1,11 @@
+[Project]
+status = unmaintained
+name = My Project 2
+description = This is an awesome project that needs help.
+category = Graphics
+repo = http://www.github.com/myproject1
+languages = Python, C
+
+[Contact]
+name = Steve Jones
+email = steve@b.com
