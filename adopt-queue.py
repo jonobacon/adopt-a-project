@@ -1,20 +1,28 @@
 import ConfigParser
 import sqlite3
 import os
+import urllib2
 
 class Adopt():
     def __init__(self):
         print "Starting up."
 
-        os.remove("db.sql")
+        if os.path.isfile("db.sql"):
+            os.remove("db.sql")
+
         self.setup_db()
 
-        self.queuefile = open("queue.list", 'r')
+        self.queuefile = open("sample-queue", 'r')
         self.fileid = 1
 
         print "Processing .adopt files..."
         for l in self.queuefile:
-            self.process_file(l)
+            print "\t * " + str(l)
+            f = open("current-adopt.tmp", 'wb')
+            url = urllib2.urlopen(l)
+            f.write(url.read())
+            f.close()
+            self.process_file("current-adopt.tmp")
             self.fileid = self.fileid + 1
 
         print "...done."
