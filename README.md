@@ -35,3 +35,5 @@ If you run the following it will process the example local queue and local adopt
 ```
 python adopt-queue.py -e
 ```
+
+You should then see a file call `generated.html` created that lists the projects that are not maintained.
