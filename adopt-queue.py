@@ -2,27 +2,46 @@ import ConfigParser
 import sqlite3
 import os
 import urllib2
+import sys
 
 class Adopt():
-    def __init__(self):
+    def __init__(self, argv):
+
+        self.examplemode = False
+
         print "Starting up."
+
+        self.args = sys.argv
+
+        for a in self.args:
+            if a == "-e":
+                self.examplemode = True
 
         if os.path.isfile("db.sql"):
             os.remove("db.sql")
 
         self.setup_db()
 
-        self.queuefile = open("sample-queue", 'r')
+        if self.examplemode == True:
+            self.queuefile = open("exampleadopts/local-queue", 'r')
+        else:
+            self.queuefile = open("sample-queue", 'r')
+
         self.fileid = 1
 
         print "Processing .adopt files..."
         for l in self.queuefile:
             print "\t * " + str(l)
-            f = open("current-adopt.tmp", 'wb')
-            url = urllib2.urlopen(l)
-            f.write(url.read())
-            f.close()
-            self.process_file("current-adopt.tmp")
+
+            if self.examplemode == True:
+                self.process_file("./exampleadopts/" + l)
+            else:
+                f = open("current-adopt.tmp", 'wb')
+                url = urllib2.urlopen(l)
+                f.write(url.read())
+                f.close()
+                self.process_file("current-adopt.tmp")
+
             self.fileid = self.fileid + 1
 
         print "...done."
@@ -54,6 +73,7 @@ class Adopt():
         config.read(f.strip())
 
         status = config.get('Project', 'status')
+
         name = config.get('Project', 'name')
         description = config.get('Project', 'description')
         category = config.get('Project', 'category')
@@ -75,5 +95,10 @@ class Adopt():
         self.db.execute(query)
         self.db.commit()
 
+    def generate_webpage(self):
+        """Generate a simple web page listing the projects."""
+        pass
+
+
 if __name__ == '__main__':
-    a = Adopt()
+    a = Adopt(sys.argv)

@@ -22,8 +22,16 @@ The idea is for this project to be as *simple* as possible. As such, there are a
 
 **Requirements**: this code only requires the standard Python library.
 
-To process the queue of submitted `.adopt` files:
+To get you started we include some example `.adopt` files in `\examplesadopts\` including a sample local queue.
+
+To process the remote queue:
 
 ```
 python adopt-queue.py
+```
+
+If you run the following it will process the example local queue and local adopt files (saves in fetching remote files):
+
+```
+python adopt-queue.py -e
 ```
