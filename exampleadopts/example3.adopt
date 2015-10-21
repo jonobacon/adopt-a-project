@@ -1,9 +1,10 @@
 [Project]
-status = unmaintained
+maintained = no
 name = My Project 3
 description = Who would not love this app?
 category = Desktop
 repo = http://www.github.com/myproject1
+discussion = http://mymailinglist.com/foobarbaz
 languages = C++
 
 [Contact]

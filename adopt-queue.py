@@ -46,6 +46,10 @@ class Adopt():
 
         print "...done."
 
+        print "Generated HTML..."
+        self.generate_webpage()
+        print "...done."
+
         self.queuefile.close()
 
     def setup_db(self):
@@ -53,12 +57,12 @@ class Adopt():
 
         print "Setting up the database..."
         self.db = sqlite3.connect("db.sql")
-        self.db.execute("CREATE TABLE project (ID INT PRIMARY KEY NOT NULL, \
-            STATUS INT NOT NULL, \
+        self.db.execute("CREATE TABLE projects (ID INT PRIMARY KEY NOT NULL, \
             NAME TEXT NOT NULL, \
             DESCRIPTION TEXT NOT NULL, \
             CATEGORY TEXT NOT NULL, \
             REPO TEXT NOT NULL, \
+            DISCUSSION TEXT NOT NULL, \
             LANGUAGES TEXT NOT NULL, \
             CONTACT TEXT NOT NULL, \
             EMAIL TEXT NOT NULL \
@@ -72,32 +76,58 @@ class Adopt():
         config = ConfigParser.ConfigParser()
         config.read(f.strip())
 
-        status = config.get('Project', 'status')
+        status = config.get('Project', 'maintained')
 
-        name = config.get('Project', 'name')
-        description = config.get('Project', 'description')
-        category = config.get('Project', 'category')
-        repo = config.get('Project', 'repo')
-        languages = config.get('Project', 'languages')
-        contact = config.get('Contact', 'name')
-        email = config.get('Contact', 'email')
+        if status == "no":
+            name = config.get('Project', 'name')
+            description = config.get('Project', 'description')
+            category = config.get('Project', 'category')
+            repo = config.get('Project', 'repo')
+            discussion = config.get('Project', 'discussion')
+            languages = config.get('Project', 'languages')
+            contact = config.get('Contact', 'name')
+            email = config.get('Contact', 'email')
 
-        query = "INSERT INTO project(ID, STATUS, NAME, DESCRIPTION, CATEGORY, REPO, LANGUAGES, CONTACT, EMAIL) VALUES(" \
-            + str(self.fileid) + ", " \
-            + str("0") + ", " \
-            + "'" + name +  "', " \
-            + "'" + description +  "', " \
-            + "'" + category +  "', " \
-            + "'" + repo +  "', " \
-            + "'" + languages +  "', " \
-            + "'" + contact +  "', " \
-            + "'" + email + "')"
-        self.db.execute(query)
-        self.db.commit()
+            query = "INSERT INTO projects(ID, NAME, DESCRIPTION, CATEGORY, REPO, DISCUSSION, LANGUAGES, CONTACT, EMAIL) VALUES(" \
+                + str(self.fileid) + ", " \
+                + "'" + name +  "', " \
+                + "'" + description +  "', " \
+                + "'" + category +  "', " \
+                + "'" + repo +  "', " \
+                + "'" + discussion +  "', " \
+                + "'" + languages +  "', " \
+                + "'" + contact +  "', " \
+                + "'" + email + "')"
+            self.db.execute(query)
+            self.db.commit()
 
     def generate_webpage(self):
         """Generate a simple web page listing the projects."""
-        pass
+
+        generated = open("generated.html", "w")
+        h = open("html/header.html", "r")
+        generated.write(h.read())
+
+
+        rows = self.db.execute("SELECT * FROM projects;")
+
+
+        for r in rows:
+            line = "<tr>"
+            line = line + "<td>" + r[1] + "</td>"
+            line = line + "<td>" + r[3] + "</td>"
+            line = line + "<td>" + r[2] + "</td>"
+            line = line + "<td>" + r[6] + "</td>"
+            line = line + "<td><a href='" + r[4] + "'>Repo</a></td>"
+            line = line + "<td><a href='" + r[5] + "'>Discussion</a></td>"
+            line = line + "<td><a href='mailto:" + r[8] + "'>" + r[7] + "</a></td>"
+            line = line + "</tr>\n"
+            generated.write(line)
+
+        f = open("html/footer.html", "r")
+        generated.write(f.read())
+        generated.close()
+
 
 
 if __name__ == '__main__':

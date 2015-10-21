@@ -1,9 +1,10 @@
 [Project]
-status = unmaintained
+maintained = yes
 name = My Project 1
 description = This is an example project that needs some love.
 category = Graphics
 repo = http://www.github.com/myproject1
+discussion = http://mymailinglist.com/foo
 languages = Python, C
 
 [Contact]
