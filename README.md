@@ -20,17 +20,34 @@ The idea is for this project to be as *simple* as possible. As such, there are a
 
 # Using This Code
 
-**Requirements**: this code only requires the standard Python library.
+**Requirements**: this code only requires CherryPy and the standard Python library.
+
+There are two pieces to this codebase:
+
+ * `website.py` is the front end that displays the list of unmained projects, let's you add a project etc.
+ * `adopt-queue.py` processes the queue of projects and updates the database (this would be run on cron).
 
 To get you started we include some example `.adopt` files in `\examplesadopts\` including a sample local queue.
 
-To process the remote queue:
+To run the website, run:
+
+```
+python website.py
+```
+
+This will spin up a CherryPy server at `127.0.0.1:8080`.
+
+You can now go to `127.0.0.1:8080/add/` to add a link to an `adopt` file somewhere (e.g. https://raw.githubusercontent.com/jonobacon/adopt-a-project/master/exampleadopts/example2.adopt). This will now add this to the `queue.list` queue in the same directory.
+
+Now, to process the remote queue run:
 
 ```
 python adopt-queue.py
 ```
 
-If you run the following it will process the example local queue and local adopt files (saves in fetching remote files):
+This will blow away the sqllite database and update it with the new list of projects.
+
+If you would prefer to hack on this and only load the local example data (not fetching remote files), run:
 
 ```
 python adopt-queue.py -e
