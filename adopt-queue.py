@@ -25,30 +25,58 @@ class Adopt():
         if self.examplemode == True:
             self.queuefile = open("exampleadopts/local-queue", 'r')
         else:
-            self.queuefile = open("sample-queue", 'r')
+            if os.path.isfile("queue.list"):
+                print "existing file"
+                self.queuefile = open("queue.list", 'r')
+                queuelines = self.queuefile.readlines()
 
         self.fileid = 1
 
-        print "Processing .adopt files..."
-        for l in self.queuefile:
-            print "\t * " + str(l)
+        if os.path.getsize("queue.list") == 0:
+            print "No projects in the queue to process."
+        else:
+            print "Processing .adopt files..."
 
-            if self.examplemode == True:
-                self.process_file("./exampleadopts/" + l)
-            else:
-                f = open("current-adopt.tmp", 'wb')
-                url = urllib2.urlopen(l)
-                f.write(url.read())
-                f.close()
-                self.process_file("current-adopt.tmp")
+            # Let's gather the lines of .adopts that will need to be removed
+            lines_to_rem = []
 
-            self.fileid = self.fileid + 1
+            for l in queuelines:
+                print "\t * " + str(l)
 
-        print "...done."
+                if self.examplemode == True:
+                    self.process_file("./exampleadopts/" + l)
+                else:
+                    f = open("current-adopt.tmp", 'wb')
+                    url = urllib2.urlopen(l)
+                    f.write(url.read())
+                    f.close()
+                    if self.process_file("current-adopt.tmp") == False:
+                        lines_to_rem.append(l)
 
-        print "Generated HTML..."
-        self.generate_webpage()
-        print "...done."
+                self.fileid = self.fileid + 1
+
+            print "...done."
+
+            # Now let's remove .adopts not required
+            # This happens when the status has changed from 'no' to 'yes'
+
+            f = open("queue.list","w")
+
+            print "Removing .adopts that are now maintained:"
+
+            for line in queuelines:
+                match = False
+                for i in lines_to_rem:
+                    if line == i:
+                        print "\t * " + str(line)
+                        match = True
+
+                if match == False:
+                    f.write(line)
+
+            f.close()
+
+            print "...done."
 
         self.queuefile.close()
 
@@ -101,34 +129,9 @@ class Adopt():
             self.db.execute(query)
             self.db.commit()
 
-    def generate_webpage(self):
-        """Generate a simple web page listing the projects."""
-
-        generated = open("generated.html", "w")
-        h = open("html/header.html", "r")
-        generated.write(h.read())
-
-
-        rows = self.db.execute("SELECT * FROM projects;")
-
-
-        for r in rows:
-            line = "<tr>"
-            line = line + "<td>" + r[1] + "</td>"
-            line = line + "<td>" + r[3] + "</td>"
-            line = line + "<td>" + r[2] + "</td>"
-            line = line + "<td>" + r[6] + "</td>"
-            line = line + "<td><a href='" + r[4] + "'>Repo</a></td>"
-            line = line + "<td><a href='" + r[5] + "'>Discussion</a></td>"
-            line = line + "<td><a href='mailto:" + r[8] + "'>" + r[7] + "</a></td>"
-            line = line + "</tr>\n"
-            generated.write(line)
-
-        f = open("html/footer.html", "r")
-        generated.write(f.read())
-        generated.close()
-
-
+            return True
+        else:
+            return False
 
 if __name__ == '__main__':
     a = Adopt(sys.argv)

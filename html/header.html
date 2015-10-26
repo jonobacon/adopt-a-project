@@ -13,29 +13,41 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
   </head>
   <body>
-    <h1>Adopt-a-project</h1>
 
+    <div>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Adopt-a-project</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home <span class="sr-only">(current)</span></a></li>
+            <li><a href="/add/">Add Project</a></li>
+          </ul>
+          <form class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+  </div>
+
+  <div style="margin: 20px;">
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
-    <p>This page lists a collection of projects that have been identified as <i>unmaintained</i>. Our goal here is to find
-        happy new maintainers to keep this projects moving forward.</p>
-
-    <p>If you want to maintain a project here, you can use the contact links to reach out to the current maintainers.</p>
-
-    <p>May the force be with you.</p>
-
-
-      <!-- Table -->
-      <table class="table">
-        <tr>
-            <th>Project</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Languages</th>
-            <th>Repo</th>
-            <th>Discussion</th>
-            <th>Contact</th>
-        </tr>

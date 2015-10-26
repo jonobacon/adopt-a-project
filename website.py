@@ -21,7 +21,9 @@ class AdoptSite(object):
         self.db = sqlite3.connect("db.sql")
         rows = self.db.execute("SELECT * FROM projects;")
 
-        if rows.rowcount == -1:
+        html = html + "<h1>Adopt-a-project</h1>"
+
+        if rows.rowcount == 0:
             html = html + "<hr /><strong>No projects.</strong> Why not go and <a href='add/'>add one?</a>.<hr/>"
         else:
             html = html + "<!-- Table --> \
@@ -62,20 +64,29 @@ class AdoptSite(object):
     def add(self):
         """Display the form to add a project."""
 
+        html = ""
+        head = open("html/header.html", "r")
+
+        html = html + head.read()
+
+        html = html + "<h1>Add a New Unmaintained Project</h1>"
+        html = html + "<p>Add a link to a publically available <tt>.adopt</tt> file</p>."
+
         # Warning: no error checking
-        return """<html>
-          <head></head>
-          <body>
-            <form method="get" action="add_project">
-              <input type="text" value="8" name="project" />
-              <button type="submit">Add your project</button>
-            </form>
-          </body>
-        </html>"""
+        html = html + """<html><head></head><body><form method='get' action='/add_project'> \
+              <input type='text' name='project' /> \
+              <button type='submit'>Add your project</button> \
+            </form></body></html>"""
+
+        foot = open("html/footer.html", "r")
+        html = html + foot.read()
+        return html
 
     @cherrypy.expose
     def add_project(self, project):
         """Add the project to the queue.list."""
+
+        print "FOOOO"
 
         # Warning: no error checking
         f = open("current-adopt-add.tmp", 'wb')
