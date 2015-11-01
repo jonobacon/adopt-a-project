@@ -20,7 +20,7 @@ The idea is for this project to be as *simple* as possible. As such, there are a
 
 # Using This Code
 
-**Requirements**: this code only requires CherryPy and the standard Python library.
+**Requirements**: this code only requires CherryPy3 and the standard Python library.
 
 There are two pieces to this codebase:
 
